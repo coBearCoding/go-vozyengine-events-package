@@ -1,12 +1,13 @@
 package config
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"go-vozyengine-events-package/handlers"
 	"log"
 	"os"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func InitializeServer() {
@@ -29,8 +30,17 @@ func createRoutes(port string) {
 
 	baseUrl := "/api/events"
 
+	//SNS - TOPICS
 	sns := r.Group(baseUrl + "/sns")
 	sns.GET("/topics", handlers.Topic)
+	sns.POST("/topics", handlers.Topic)
+
+	//SNS - SUBSCRIPTIONS
+	sns.GET("/subscriptions", handlers.Subscription)
+	sns.POST("/subscriptions", handlers.Subscription)
+
+	//SNS - PUBLISH MESSAGE
+	sns.POST("/publish-message", handlers.Publish)
 
 	if port != "" {
 		r.Run(":" + port)
